@@ -108,10 +108,11 @@ export default function Kontak() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-1">
-              <div className="overflow-hidden rounded-2xl border border-amber-200/60 bg-white shadow-sm">
-                <div className="relative overflow-hidden bg-gradient-to-br from-yellow-400 via-amber-300 to-yellow-500 p-6 text-center text-slate-900">
-                  <div className="absolute top-0 right-0 h-20 w-20 rounded-full bg-white/10 blur-[30px]" />
-                  <div className="mx-auto h-20 w-20 overflow-hidden rounded-full border-4 border-slate-950/25 p-0.5 shadow-[0_0_15px_rgba(15,23,42,0.1)] ring-4 ring-slate-950/10">
+              <div className="overflow-hidden rounded-2xl border border-amber-500/15 bg-white shadow-sm group/profile">
+                <div className="relative overflow-hidden bg-gradient-to-br from-yellow-400 via-amber-300 to-yellow-500 p-6 text-center text-slate-955">
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:1.5rem_1.5rem] opacity-20 pointer-events-none" />
+                  <div className="absolute top-0 right-0 h-20 w-20 rounded-full bg-white/20 blur-[30px] pointer-events-none" />
+                  <div className="mx-auto h-20 w-20 overflow-hidden rounded-full border-4 border-slate-950/20 p-0.5 shadow-[0_0_15px_rgba(217,119,6,0.15)] ring-4 ring-white/20 transition-transform duration-500 group-hover/profile:scale-105">
                     <img
                       src="/H_saiful_milah.jpeg"
                       alt="Abah Saiful Milah"
@@ -123,8 +124,8 @@ export default function Kontak() {
                       }}
                     />
                   </div>
-                  <h3 className="mt-3 font-black text-slate-950">Abah Saiful Milah</h3>
-                  <Badge className="mt-2 bg-slate-900 text-yellow-300 font-bold border border-slate-950/20 px-3.5 py-0.5 text-[10px]">
+                  <h3 className="mt-3 font-black text-slate-955 transition-colors duration-300">Abah Saiful Milah</h3>
+                  <Badge className="mt-2 bg-slate-900 text-yellow-300 font-black border border-slate-950/20 px-3.5 py-0.5 text-[10px] uppercase tracking-wider">
                     Ketua Fraksi Golkar DPRD
                   </Badge>
                 </div>
@@ -161,15 +162,15 @@ export default function Kontak() {
                         href={s.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center gap-3.5 rounded-xl border border-amber-200/50 bg-white p-3.5 transition-all duration-200 hover:bg-amber-50/40 hover:border-amber-500/35 hover:shadow-sm"
+                        className="group/item flex items-center gap-3.5 rounded-xl border border-amber-200/50 bg-white p-3.5 transition-all duration-300 hover:bg-amber-50/20 hover:border-amber-500/40 hover:shadow-[0_4px_15px_rgba(217,119,6,0.06)]"
                       >
                         <div
-                          className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 text-yellow-400 transition-transform duration-300 group-hover:scale-110"
+                          className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-955 text-yellow-400 transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-[0_0_10px_rgba(245,209,48,0.25)]"
                         >
                           <IconComponent size={16} />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-slate-800 group-hover:text-amber-700 transition-colors duration-200">
+                          <p className="text-sm font-bold text-slate-800 group-hover/item:text-amber-700 transition-colors duration-200">
                             {s.name}
                           </p>
                           <p className="text-xs text-slate-400 font-medium mt-0.5">{s.label}</p>
@@ -182,8 +183,9 @@ export default function Kontak() {
             </div>
 
             <div className="lg:col-span-2">
-              <div className="rounded-2xl border border-amber-200/60 bg-white p-6 sm:p-8 shadow-sm">
-                <h2 className="mb-6 text-lg font-bold text-slate-800">
+              <div className="rounded-2xl border border-amber-500/15 bg-white p-6 sm:p-8 shadow-[0_12px_40px_-10px_rgba(217,119,6,0.06)] backdrop-blur-sm relative">
+                <h2 className="mb-6 text-xl font-black text-slate-800 border-b border-slate-100 pb-4 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-amber-555 animate-pulse" />
                   Kirim Pesan Langsung
                 </h2>
                 {submitted ? (

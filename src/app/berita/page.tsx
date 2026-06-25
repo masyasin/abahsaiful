@@ -70,7 +70,7 @@ export default function Berita() {
         <div className="absolute bottom-24 right-10 -z-10 h-96 w-96 rounded-full bg-amber-400/15 blur-[140px] pointer-events-none" />
         <div className="absolute top-1/2 left-1/3 -z-10 h-80 w-80 rounded-full bg-orange-300/5 blur-[120px] pointer-events-none" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 overflow-hidden rounded-2xl border border-amber-500/15 bg-slate-955 shadow-lg transition-all duration-300 hover:shadow-xl group">
+          <div className="mb-12 overflow-hidden rounded-2xl border border-amber-500/15 bg-white shadow-lg transition-all duration-300 hover:shadow-xl group">
             <div className="grid md:grid-cols-2">
               {/* Image side */}
               <div className="relative h-72 md:h-auto min-h-[320px] overflow-hidden">
@@ -79,30 +79,30 @@ export default function Berita() {
                   alt={featuredNews.title}
                   className="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent md:bg-gradient-to-r md:from-transparent md:to-slate-950/60" />
-                <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-[10px] font-black text-yellow-400 uppercase tracking-wider bg-slate-950/85 px-3 py-1.5 rounded-md border border-yellow-400/20 backdrop-blur-sm shadow-sm z-10 animate-pulse">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 text-[10px] font-black text-amber-955 uppercase tracking-wider bg-yellow-400 px-3 py-1.5 rounded-md border border-yellow-500/30 shadow-sm z-10 animate-pulse">
                   Berita Utama
                 </span>
               </div>
               {/* Text side */}
-              <div className="relative flex flex-col justify-center bg-gradient-to-br from-slate-900 via-slate-955 to-slate-900 p-8 text-white sm:p-10 border-t md:border-t-0 md:border-l border-amber-500/15">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(251,191,36,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(251,191,36,0.01)_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-30 pointer-events-none" />
+              <div className="relative flex flex-col justify-center bg-gradient-to-br from-yellow-400 via-amber-300 to-yellow-500 p-8 text-slate-955 sm:p-10 border-t md:border-t-0 md:border-l border-amber-500/15">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-20 pointer-events-none" />
                 <div className="relative z-10">
-                  <Badge className="mb-4 bg-yellow-400 text-slate-955 font-black border border-yellow-500/20 px-3 py-1 uppercase tracking-wider text-[10px]">
+                  <Badge className="mb-4 bg-slate-900 text-yellow-300 font-black border border-slate-950/20 px-3 py-1 uppercase tracking-wider text-[10px]">
                     {featuredNews.category}
                   </Badge>
-                  <h2 className="text-xl font-black leading-tight tracking-tight sm:text-2xl lg:text-3xl text-white group-hover:text-yellow-400 transition-colors duration-300">
+                  <h2 className="text-xl font-black leading-tight tracking-tight sm:text-2xl lg:text-3xl text-slate-955 group-hover:text-amber-800 transition-colors duration-300">
                     {featuredNews.title}
                   </h2>
-                  <p className="mt-4 text-sm leading-relaxed text-slate-300 font-medium">
+                  <p className="mt-4 text-sm leading-relaxed text-slate-800 font-semibold">
                     {featuredNews.excerpt}
                   </p>
-                  <div className="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/5">
-                    <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
-                      <Calendar size={14} className="text-yellow-400" />
+                  <div className="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-slate-950/10">
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-755">
+                      <Calendar size={14} className="text-amber-800" />
                       {featuredNews.date}
                     </span>
-                    <button className="inline-flex items-center gap-1.5 text-xs font-black text-yellow-400 hover:text-yellow-300 transition-colors duration-200 cursor-pointer">
+                    <button className="inline-flex items-center gap-1.5 text-xs font-black text-slate-955 hover:text-amber-800 transition-colors duration-200 cursor-pointer">
                       Baca Selengkapnya <ArrowRight size={14} />
                     </button>
                   </div>

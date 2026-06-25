@@ -7,32 +7,40 @@ import { cn } from "@/lib/utils";
 
 const programs = [
   {
-    judul: "Peningkatan Infrastruktur Desa",
-    deskripsi: "Membangun dan merehabilitasi jalan desa, jembatan, dan saluran irigasi di daerah pemilihan untuk meningkatkan konektivitas dan produktivitas pertanian.",
+    judul: "Rehabilitasi Jalan Raya Provinsi Banten",
+    deskripsi: "Memperjuangkan perbaikan kualitas dan pelebaran jalan raya provinsi, perbaikan jembatan penghubung antar-wilayah, dan penerangan jalan umum terintegrasi di Banten.",
     kategori: "Infrastruktur",
     progress: 100,
     status: "selesai",
     icon: "🏗️",
   },
   {
-    judul: "Beasiswa Pendidikan Anak Negeri",
-    deskripsi: "Program beasiswa bagi siswa berprestasi dari keluarga kurang mampu, mencakup biaya sekolah, seragam, dan perlengkapan belajar.",
+    judul: "Program 1.000 Beasiswa Banten Pintar",
+    deskripsi: "Advokasi bantuan dana beasiswa penuh bagi siswa berprestasi dan kurang mampu di tingkat SMA/SMK negeri maupun swasta, serta mahasiswa perguruan tinggi di wilayah Banten.",
     kategori: "Pendidikan",
     progress: 65,
     status: "berjalan",
     icon: "📚",
   },
   {
-    judul: "Program UMKM Naik Kelas",
-    deskripsi: "Pelatihan digital marketing, akses permodalan, dan pendampingan legalitas usaha bagi pelaku UMKM di wilayah dapil.",
+    judul: "Link-and-Match Vokasi & Kemitraan Industri",
+    deskripsi: "Membangun kerja sama strategis antara Sekolah Menengah Kejuruan (SMK) dengan kawasan industri besar di Banten untuk mempercepat penyerapan kerja lulusan muda.",
     kategori: "Ekonomi",
     progress: 40,
     status: "berjalan",
     icon: "💼",
   },
   {
-    judul: "Layanan Kesehatan Keliling",
-    deskripsi: "Menyediakan layanan kesehatan gratis berupa pemeriksaan umum, pengobatan, dan penyuluhan kesehatan di desa-desa terpencil.",
+    judul: "Normalisasi Sungai Makro & Mitigasi Banjir",
+    deskripsi: "Mengawal alokasi anggaran normalisasi Daerah Aliran Sungai (DAS) lintas wilayah, optimalisasi pintu air makro, serta pembangunan embung dan waduk retensi air di area rawan.",
+    kategori: "Infrastruktur",
+    progress: 30,
+    status: "berjalan",
+    icon: "🌊",
+  },
+  {
+    judul: "Layanan Kesehatan & Posyandu Provinsi Terpadu",
+    deskripsi: "Menyediakan armada layanan ambulans gratis untuk kebutuhan darurat warga dan memperjuangkan kelengkapan alat kesehatan (alkes) pada posyandu-posyandu di daerah.",
     kategori: "Kesehatan",
     progress: 0,
     status: "direncanakan",
@@ -145,14 +153,14 @@ export default function ProgramKerja() {
             <div className="relative overflow-hidden rounded-2xl border border-amber-500/20 bg-white p-6 sm:p-8 shadow-[0_10px_30px_-10px_rgba(245,209,48,0.15)]">
               <div className="absolute top-0 left-0 h-full w-[4px] bg-gradient-to-b from-amber-500 to-yellow-400" />
               <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-amber-800">
-                Rekomendasi Prioritas Pokir 2026
+                Rekomendasi Prioritas Pokir Provinsi Banten 2026
               </h3>
               <p className="text-sm leading-relaxed text-slate-700 font-medium">
                 Berdasarkan analisis terpadu terhadap <strong>128 aspirasi warga</strong> yang masuk,
-                prioritas utama untuk Pokok Pikiran (Pokir) DPRD 2026 adalah
-                sektor <strong className="text-amber-850 font-bold">Infrastruktur (34%)</strong> and{" "}
-                <strong className="text-amber-850 font-bold">Pendidikan (28%)</strong>. Rekomendasi lengkap telah
-                disusun secara terukur untuk diteruskan ke OPD terkait Pemerintah Kota Tangerang.
+                prioritas utama untuk Pokok Pikiran (Pokir) DPRD Provinsi Banten 2026 adalah
+                sektor <strong className="text-amber-850 font-bold">Infrastruktur & Jalan Raya (34%)</strong> serta{" "}
+                <strong className="text-amber-850 font-bold">Pendidikan SMA/SMK & Beasiswa (28%)</strong>. Rekomendasi lengkap telah
+                disusun secara terukur untuk diteruskan ke Organisasi Perangkat Daerah (OPD) terkait di tingkat Pemerintah Provinsi Banten.
               </p>
             </div>
           </div>

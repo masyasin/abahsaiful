@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { Send, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { Send, CheckCircle, Clock, AlertCircle, Check } from "lucide-react";
 
 const chartData = [
   { name: "Infrastruktur", value: 44, color: "#0f172a" },
@@ -43,6 +43,41 @@ export default function Aspirasi() {
     lokasi: "",
   });
   const [submitted, setSubmitted] = useState(false);
+
+  const [aspirations, setAspirations] = useState([
+    { id: 1, judul: "Jalan rusak di Desa Tanjung", status: "baru", kategori: "Infrastruktur", tanggal: "2026-06-22", published: false, forwarded: false },
+    { id: 2, judul: "Beasiswa untuk siswa SMA", status: "proses", kategori: "Pendidikan", tanggal: "2026-06-20", published: false, forwarded: false },
+    { id: 3, judul: "Bantuan modal UMKM", status: "selesai", kategori: "Ekonomi", tanggal: "2026-06-18", published: false, forwarded: false },
+    { id: 4, judul: "Puskesmas keliling", status: "baru", kategori: "Kesehatan", tanggal: "2026-06-15", published: false, forwarded: false },
+    { id: 5, judul: "Perbaikan irigasi sawah", status: "proses", kategori: "Infrastruktur", tanggal: "2026-06-12", published: false, forwarded: false },
+  ]);
+
+  const handlePublish = (id: number) => {
+    setAspirations(prev =>
+      prev.map(a => (a.id === id ? { ...a, published: true } : a))
+    );
+  };
+
+  const handleForward = (id: number) => {
+    setAspirations(prev =>
+      prev.map(a => (a.id === id ? { ...a, forwarded: true } : a))
+    );
+  };
+
+  const getOpdName = (kategori: string) => {
+    switch (kategori) {
+      case "Infrastruktur":
+        return "Dinas PUPR";
+      case "Pendidikan":
+        return "Dinas Pendidikan";
+      case "Ekonomi":
+        return "Dinas Koperasi & UMKM";
+      case "Kesehatan":
+        return "Dinas Kesehatan";
+      default:
+        return "Dinas Terkait";
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -238,7 +273,7 @@ export default function Aspirasi() {
               </h2>
             </div>
             <div className="space-y-4">
-              {recentAspirations.map((a) => (
+              {aspirations.map((a) => (
                 <div
                   key={a.id}
                   className="group flex items-start gap-4 rounded-2xl border border-amber-200/60 bg-white p-5 shadow-sm transition-all duration-300 hover:border-amber-500/35 hover:shadow-md"
@@ -247,7 +282,7 @@ export default function Aspirasi() {
                     {a.status === "selesai" ? (
                       <CheckCircle size={20} className="text-amber-500" />
                     ) : a.status === "proses" ? (
-                      <Clock size={20} className="text-amber-650" />
+                      <Clock size={20} className="text-amber-655" />
                     ) : (
                       <AlertCircle size={20} className="text-amber-600" />
                     )}
@@ -264,13 +299,32 @@ export default function Aspirasi() {
                       <span>&bull;</span>
                       <span>{a.tanggal}</span>
                     </div>
-                    <div className="mt-4 flex gap-2">
-                      <button className="rounded-lg bg-amber-500/10 px-3.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-500/20 transition-all duration-200 cursor-pointer">
-                        Publish ke Peta
-                      </button>
-                      <button className="rounded-lg bg-slate-500/10 px-3.5 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-500/20 transition-all duration-200 cursor-pointer">
-                        Teruskan ke OPD
-                      </button>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {a.published ? (
+                        <div className="rounded-lg bg-emerald-500/15 px-3 py-1.5 text-xs font-black text-emerald-800 border border-emerald-500/25 flex items-center gap-1 select-none">
+                          <Check size={13} /> Terpublikasi di Peta
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => handlePublish(a.id)}
+                          className="rounded-lg bg-amber-500/10 px-3.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-500/20 transition-all duration-200 cursor-pointer flex items-center gap-1"
+                        >
+                          Publish ke Peta
+                        </button>
+                      )}
+
+                      {a.forwarded ? (
+                        <div className="rounded-lg bg-blue-500/15 px-3 py-1.5 text-xs font-black text-blue-800 border border-blue-500/25 flex items-center gap-1 select-none">
+                          <Check size={13} /> Diteruskan ke {getOpdName(a.kategori)}
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => handleForward(a.id)}
+                          className="rounded-lg bg-slate-500/10 px-3.5 py-1.5 text-xs font-bold text-slate-800 hover:bg-slate-500/20 transition-all duration-200 cursor-pointer flex items-center gap-1"
+                        >
+                          Teruskan ke OPD
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -19,28 +19,40 @@ import {
   TrendingUp,
   Sparkles,
   Newspaper,
-  LineChart
+  LineChart,
+  Coins,
+  Calculator,
+  School,
+  MapPin,
+  UserCheck,
+  Send,
+  ThumbsUp,
+  CheckCircle2,
+  FileText,
+  Share2,
+  Download,
+  X
 } from "lucide-react";
 
 const slides = [
   {
     id: 1,
-    badge: "Ketua Fraksi Golkar DPRD Kota Tangerang",
+    badge: "Calon Anggota DPRD Provinsi Banten | Fraksi Golkar",
     title: "Abah Saiful Milah",
-    description: "Berjuang untuk masyarakat Kota Tangerang melalui program kerja yang terukur, aspirasi yang didengar, dan pembangunan yang merata.",
-    primaryBtnText: "Sampaikan Aspirasi Resmi",
+    description: "Mengabdi lebih luas, berjuang untuk kemajuan dan kesejahteraan seluruh masyarakat Provinsi Banten melalui pembangunan merata dan pendidikan berkeadilan.",
+    primaryBtnText: "Sampaikan Aspirasi Banten",
     primaryBtnHref: "/aspirasi",
-    secondaryBtnText: "Lihat Program Kerja",
+    secondaryBtnText: "Lihat Rencana Kerja",
     secondaryBtnHref: "/program-kerja",
     image: "/H_saiful_milah.jpeg",
     type: "profile"
   },
   {
     id: 2,
-    badge: "Aksi Nyata & Kerja Terukur",
-    title: "Pembangunan & Kesejahteraan Rakyat",
-    description: "Mengawal pembangunan infrastruktur jalan, jembatan, irigasi desa, serta memperjuangkan dana beasiswa pendidikan bagi siswa berprestasi di Kota Tangerang.",
-    primaryBtnText: "Lihat Semua Program",
+    badge: "Aksi Nyata Skala Provinsi Banten",
+    title: "Pembangunan & Kesejahteraan Banten",
+    description: "Memperjuangkan pembangunan jalan provinsi yang mulus, jembatan penghubung antar-wilayah, pengendalian banjir terpadu, serta akses SMA/SMK negeri gratis.",
+    primaryBtnText: "Lihat Program Provinsi",
     primaryBtnHref: "/program-kerja",
     secondaryBtnText: "Hubungi Kami",
     secondaryBtnHref: "/kontak",
@@ -49,9 +61,9 @@ const slides = [
   },
   {
     id: 3,
-    badge: "Suara Rakyat Adalah Amanah",
-    title: "Dengar, Kawal, dan Perjuangkan Aspirasi",
-    description: "Laporkan keluhan pembangunan, layanan kesehatan, atau usulan bantuan sosial di wilayah Anda. Kami kawal langsung ke tingkat dinas terkait.",
+    badge: "Suara Rakyat Banten Amanah Kita",
+    title: "Saluran Aspirasi Warga Banten",
+    description: "Sampaikan usulan jalan provinsi, keluhan PPDB zonasi SMA/SMK, atau program sosial di wilayah Anda. Kami kawal langsung ke OPD Provinsi Banten.",
     primaryBtnText: "Kirim Aspirasi Sekarang",
     primaryBtnHref: "/aspirasi",
     secondaryBtnText: "Peta Pembangunan",
@@ -81,9 +93,83 @@ const activities = [
   { judul: "Kunjungan Kerja ke Dapil Ciledug", tanggal: "2026-06-10", kategori: "Dapil" },
 ];
 
+const formatNumber = (num: number) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 export default function Beranda() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeAiTab, setActiveAiTab] = useState("media");
+
+  // State for APBD Calculator
+  const [apbdWeights, setApbdWeights] = useState({
+    pendidikan: 8,
+    infrastruktur: 7,
+    pekerjaan: 8,
+    banjir: 6,
+  });
+  const [mandatNama, setMandatNama] = useState("");
+  const [mandatKota, setMandatKota] = useState("Kota Tangerang");
+  const [showMandatCard, setShowMandatCard] = useState(false);
+  const [copiedMandat, setCopiedMandat] = useState(false);
+  const [mandatRegId, setMandatRegId] = useState(100000);
+
+  // State for PPDB & Scholarship Checker
+  const [ppdbWilayah, setPpdbWilayah] = useState("Kota Tangerang");
+  const [ppdbSekolah, setPpdbSekolah] = useState("");
+  const [ppdbIsChecking, setPpdbIsChecking] = useState(false);
+  const [ppdbResult, setPpdbResult] = useState<any>(null);
+  const [showBeasiswaForm, setShowBeasiswaForm] = useState(false);
+  const [beasiswaNama, setBeasiswaNama] = useState("");
+  const [beasiswaKelas, setBeasiswaKelas] = useState("10");
+  const [beasiswaHp, setBeasiswaHp] = useState("");
+  const [beasiswaSuccess, setBeasiswaSuccess] = useState(false);
+  const [beasiswaTicket, setBeasiswaTicket] = useState("");
+
+  // State for Pledge/Petition Wall
+  const [petitions, setPetitions] = useState([
+    { nama: "Budi Santoso", wilayah: "Ciledug", prioritas: "Sekolah SMA/SMK Gratis", waktu: "5 menit yang lalu" },
+    { nama: "Siti Aminah", wilayah: "Larangan", prioritas: "Jalan Provinsi Mulus", waktu: "12 menit yang lalu" },
+    { nama: "Hendra Wijaya", wilayah: "Karang Tengah", prioritas: "Kerja Gampang & UMKM", waktu: "25 menit yang lalu" },
+    { nama: "Ahmad Fauzi", wilayah: "Cipondoh", prioritas: "Banjir Lintas Batas", waktu: "1 jam yang lalu" },
+  ]);
+  const [petitionNama, setPetitionNama] = useState("");
+  const [petitionWilayah, setPetitionWilayah] = useState("Ciledug");
+  const [petitionPrioritas, setPetitionPrioritas] = useState("Sekolah SMA/SMK Gratis");
+  const [totalSupport, setTotalSupport] = useState(1420);
+  const [newPetitionId, setNewPetitionId] = useState<number | null>(null);
+
+  // Calculations for APBD
+  const totalWeights = apbdWeights.pendidikan + apbdWeights.infrastruktur + apbdWeights.pekerjaan + apbdWeights.banjir;
+  const nominalPendidikan = (apbdWeights.pendidikan / totalWeights) * 12;
+  const nominalInfrastruktur = (apbdWeights.infrastruktur / totalWeights) * 12;
+  const nominalPekerjaan = (apbdWeights.pekerjaan / totalWeights) * 12;
+  const nominalBanjir = (apbdWeights.banjir / totalWeights) * 12;
+
+  const sectors = [
+    { key: "Pendidikan", val: nominalPendidikan, label: "Pendidikan SMA/SMK Gratis & Beasiswa", icon: GraduationCap, weightKey: "pendidikan" as const, desc: "Pembangunan SMA/SMK baru, rehabilitasi kelas, SPP gratis, dan Beasiswa Banten Pintar." },
+    { key: "Infrastruktur", val: nominalInfrastruktur, label: "Infrastruktur Jalan Provinsi Mulus", icon: Hammer, weightKey: "infrastruktur" as const, desc: "Peningkatan kualitas jalan provinsi bebas lubang, perbaikan jembatan, dan lampu penerangan jalan." },
+    { key: "Lapangan Kerja", val: nominalPekerjaan, label: "Lapangan Kerja & Kemitraan SMK", icon: ClipboardCheck, weightKey: "pekerjaan" as const, desc: "Sinergi kurikulum SMK dengan industri, pelatihan kerja bersertifikat, dan modal usaha UMKM." },
+    { key: "Mitigasi Banjir", val: nominalBanjir, label: "Penanganan Banjir & Irigasi Terpadu", icon: HeartPulse, weightKey: "banjir" as const, desc: "Normalisasi sungai lintas batas daerah, pembangunan tanggul penahan, dan perbaikan pintu air makro." },
+  ];
+
+  // Sort sectors to find the highest
+  const highestSector = [...sectors].sort((a, b) => b.val - a.val)[0];
+
+  // Abah's dynamic commitments
+  const getAbahCommitment = (sectorKey: string) => {
+    switch (sectorKey) {
+      case "Pendidikan":
+        return "Saya siap memperjuangkan porsi anggaran pendidikan menengah atas agar merata. Fokus utama saya adalah menjamin tidak ada anak Banten yang putus sekolah tingkat SMA/SMK dengan melipatgandakan penerima Beasiswa Banten Pintar serta mempermudah sistem zonasi PPDB agar lebih adil bagi warga.";
+      case "Infrastruktur":
+        return "Infrastruktur jalan adalah urat nadi ekonomi. Saya akan mengawal ketat anggaran pemeliharaan jalan provinsi di Banten, memastikan tidak ada lagi jalan provinsi berlubang yang membahayakan pengendara, serta mendorong pembangunan jembatan penghubung yang kokoh.";
+      case "Lapangan Kerja":
+        return "Banten memiliki kawasan industri besar namun angka pengangguran lulusan muda masih menjadi tantangan. Saya akan memperjuangkan alokasi APBD untuk program link-and-match sekolah vokasi (SMK) dengan industri lokal, pelatihan kerja bersertifikat BNSP gratis, dan insentif bagi UMKM pemula.";
+      case "Mitigasi Banjir":
+      default:
+        return "Banjir adalah masalah lintas batas wilayah yang memerlukan solusi tingkat provinsi. Saya berkomitmen mengawal alokasi anggaran normalisasi Daerah Aliran Sungai (DAS) lintas wilayah, optimalisasi pintu air makro, serta pembangunan embung dan waduk retensi air di area rawan.";
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -607,6 +693,597 @@ export default function Beranda() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 1: Kalkulator APBD Harapan Rakyat Banten */}
+      <section className="bg-gradient-to-b from-[#FFFDF2] via-[#FFFBE0] to-[#FFF9D0] py-20 border-b border-amber-500/10 relative overflow-hidden">
+        <div className="absolute top-1/3 right-[10%] h-96 w-96 rounded-full bg-yellow-300/20 blur-[100px] -z-10 animate-pulse" />
+        <div className="absolute bottom-10 left-10 h-72 w-72 rounded-full bg-amber-300/15 blur-[80px] -z-10" />
+        
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/20 bg-amber-500/10 text-xs font-bold text-amber-800 uppercase tracking-widest mb-3">
+              <Coins size={12} className="text-amber-600 animate-bounce" />
+              Gagasan Anggaran Partisipatif
+            </div>
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
+              Kalkulator APBD <span className="bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent">Harapan Rakyat Banten</span>
+            </h2>
+            <p className="mt-2 text-sm font-semibold text-slate-500 max-w-2xl mx-auto">
+              Banten memiliki estimasi APBD sebesar <strong>Rp 12 Triliun</strong>. Geser tingkat prioritas di bawah ini untuk mengalokasikan anggaran versi Anda, dan lihat komitmen perjuangan Abah Saiful Milah!
+            </p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-12 items-start">
+            {/* Left: Sliders */}
+            <div className="lg:col-span-7 space-y-6 rounded-2xl border border-amber-500/15 bg-white/95 p-6 sm:p-8 shadow-sm backdrop-blur-sm">
+              <h3 className="text-lg font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                <Calculator size={18} className="text-amber-600" />
+                Tentukan Bobot Prioritas Anda (Skala 1 - 10)
+              </h3>
+              
+              <div className="space-y-6">
+                {sectors.map((sec) => {
+                  const Icon = sec.icon;
+                  return (
+                    <div key={sec.key} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-700 flex items-center gap-2 text-sm sm:text-base">
+                          <span className="p-1.5 rounded-lg bg-amber-100 text-amber-700">
+                            <Icon size={16} />
+                          </span>
+                          {sec.label}
+                        </span>
+                        <span className="text-xs font-black px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-800">
+                          Skala Prioritas: {apbdWeights[sec.weightKey]}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium leading-normal">{sec.desc}</p>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-slate-400">Rendah</span>
+                        <input
+                          type="range"
+                          min="1"
+                          max="10"
+                          value={apbdWeights[sec.weightKey]}
+                          onChange={(e) => {
+                            setApbdWeights({
+                              ...apbdWeights,
+                              [sec.weightKey]: parseInt(e.target.value)
+                            });
+                          }}
+                          className="flex-1 h-2 rounded-full bg-slate-100 accent-amber-500 cursor-pointer"
+                        />
+                        <span className="text-xs font-bold text-amber-600">Sangat Tinggi</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right: Real-time APBD Allocation Results & Commitment */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Live Nominal Card */}
+              <div className="rounded-2xl border-2 border-amber-400 bg-white p-6 shadow-md flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute top-0 right-0 h-16 w-16 rounded-bl-3xl bg-amber-400/10" />
+                
+                <h3 className="text-sm font-black uppercase text-amber-850 tracking-wider mb-4 flex items-center gap-1.5">
+                  <Sparkles size={14} className="text-amber-500 animate-pulse" />
+                  Estimasi Porsi Anggaran Anda
+                </h3>
+
+                <div className="space-y-4">
+                  {sectors.map((sec) => (
+                    <div key={sec.key} className="flex items-center justify-between border-b border-slate-50 pb-2.5 last:border-0 last:pb-0">
+                      <span className="text-xs font-bold text-slate-600">{sec.key}</span>
+                      <div className="text-right">
+                        <span className="block text-sm font-black text-slate-800">
+                          Rp {sec.val.toFixed(2)} Triliun
+                        </span>
+                        <span className="block text-[10px] font-bold text-amber-600">
+                          {((sec.val / 12) * 100).toFixed(1)}% porsi APBD
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs font-black text-slate-700">TOTAL APBD PROVINSI</span>
+                  <span className="text-base font-black text-amber-700 bg-amber-500/10 px-3 py-1 rounded-lg">
+                    Rp 12.00 Triliun
+                  </span>
+                </div>
+              </div>
+
+              {/* Abah's Digital Pledge Card */}
+              <div className="rounded-2xl border border-amber-500/15 bg-gradient-to-br from-amber-50 to-yellow-50/50 p-6 shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="relative h-10 w-10 overflow-hidden rounded-full border border-amber-500">
+                    <img src="/H_saiful_milah.jpeg" alt="Abah Saiful" className="h-full w-full object-cover object-top" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Komitmen Abah Saiful Milah</h4>
+                    <p className="text-[10px] text-amber-700 font-bold">Terfokus pada Sektor: {highestSector.key}</p>
+                  </div>
+                </div>
+                
+                <p className="text-xs text-slate-700 font-medium leading-relaxed italic border-l-2 border-amber-400 pl-3">
+                  &ldquo;{getAbahCommitment(highestSector.key)}&rdquo;
+                </p>
+
+                {/* Form to submit and get Mandate Card */}
+                <div className="mt-5 pt-4 border-t border-amber-200/30 space-y-3">
+                  <p className="text-[11px] text-slate-500 font-bold">Salurkan aspirasi anggaran ini langsung menjadi Mandat Rakyat:</p>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      placeholder="Masukkan nama Anda..."
+                      value={mandatNama}
+                      onChange={(e) => setMandatNama(e.target.value)}
+                      className="flex-1 rounded-lg border border-amber-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                    />
+                    <button
+                      onClick={() => {
+                        if (!mandatNama.trim()) {
+                          alert("Silakan masukkan nama Anda untuk membuat Kartu Mandat.");
+                          return;
+                        }
+                        setMandatRegId(Math.floor(Math.random() * 900000 + 100000));
+                        setShowMandatCard(true);
+                      }}
+                      className="rounded-lg bg-slate-955 text-yellow-400 hover:bg-slate-900 px-4 py-2 text-xs font-black transition-colors shadow-sm cursor-pointer whitespace-nowrap"
+                    >
+                      Kirim Mandat Rakyat
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mandate Card Modal */}
+        {showMandatCard && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+            <div className="relative max-w-md w-full rounded-2xl border-2 border-amber-400 bg-gradient-to-b from-[#FFFDF5] to-[#FFFBE0] p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+              <button
+                onClick={() => {
+                  setShowMandatCard(false);
+                  setCopiedMandat(false);
+                }}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="text-center space-y-4 pt-2">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 mb-2">
+                  <CheckCircle2 size={26} />
+                </div>
+                <h3 className="text-lg font-black text-slate-900">Mandat Berhasil Disalurkan!</h3>
+                <p className="text-xs text-slate-500 font-semibold">
+                  Terima kasih, <strong>{mandatNama}</strong>. Aspirasi anggaran Anda telah terekam secara digital dan siap diperjuangkan di DPRD Provinsi Banten.
+                </p>
+
+                {/* Digital Mandate Card Graphic */}
+                <div className="rounded-xl border border-amber-300 bg-white p-5 shadow-inner text-left space-y-3 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 h-10 w-10 rounded-bl-2xl bg-amber-400/20 flex items-center justify-center text-amber-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div className="border-b border-slate-100 pb-2">
+                    <span className="block text-[9px] font-black uppercase text-amber-700 tracking-widest">KARTU MANDAT RAKYAT BANTEN</span>
+                    <span className="block text-xs font-bold text-slate-400">No. Registrasi: BMT-2026-{mandatRegId}</span>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="block text-[10px] font-semibold text-slate-400 uppercase">Nama Pemberi Mandat</span>
+                    <span className="block text-sm font-black text-slate-800">{mandatNama}</span>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="block text-[10px] font-semibold text-slate-400 uppercase">Prioritas Utama APBD</span>
+                    <span className="block text-sm font-black text-amber-750 flex items-center gap-1.5">
+                      <highestSector.icon size={14} />
+                      {highestSector.label}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="block text-[10px] font-semibold text-slate-400 uppercase">Pesan Komitmen Perjuangan</span>
+                    <span className="block text-[11px] text-slate-600 font-semibold leading-normal bg-amber-500/5 p-2.5 rounded-lg border border-amber-500/10">
+                      Abah Saiful Milah berkomitmen memperjuangkan porsi anggaran <strong>{highestSector.key}</strong> senilai sekitar <strong>Rp {highestSector.val.toFixed(2)} Triliun</strong> untuk kepentingan rakyat Banten.
+                    </span>
+                  </div>
+                  <div className="pt-2 border-t border-slate-100 flex justify-between items-center text-[9px] text-slate-400 font-bold">
+                    <span>DPRD PROVINSI BANTEN 2026-2031</span>
+                    <span className="text-amber-600 font-black uppercase">SAIFUL MILAH</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2.5 pt-2">
+                  <button
+                    onClick={() => {
+                      setCopiedMandat(true);
+                      setTimeout(() => setCopiedMandat(false), 2000);
+                      navigator.clipboard.writeText(`Saya telah mengirimkan Mandat APBD Banten kepada Abah Saiful Milah! Prioritas saya: ${highestSector.label}. Buat mandat Anda di: abahsaiful.sintechabadi.com`);
+                    }}
+                    className="flex-1 inline-flex justify-center items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  >
+                    <Share2 size={13} />
+                    {copiedMandat ? "Tersalin!" : "Bagikan"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      alert("Simulasi unduh kartu berhasil. File JPG sedang di-generate di latar belakang.");
+                    }}
+                    className="flex-1 inline-flex justify-center items-center gap-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2.5 text-xs font-black text-white hover:from-amber-600 hover:to-amber-700 cursor-pointer shadow-sm shadow-amber-500/20"
+                  >
+                    <Download size={13} />
+                    Unduh Kartu
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* SECTION 2: Portal Banten Cerdas (Advokasi Pendidikan SMA/SMK) */}
+      <section className="bg-gradient-to-b from-[#FFF9D0] to-[#FFFDF5] py-20 border-b border-amber-500/10 relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-12 items-center">
+            {/* Left: Program Info */}
+            <div className="lg:col-span-5 space-y-5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/20 bg-amber-500/10 text-xs font-bold text-amber-800 uppercase tracking-widest">
+                <School size={12} className="text-amber-600" />
+                Wewenang Utama Provinsi
+              </div>
+              <h2 className="text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
+                Advokasi Pendidikan <span className="bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent">Banten Cerdas</span>
+              </h2>
+              <p className="text-sm font-semibold text-slate-700 leading-relaxed">
+                Pengelolaan sekolah tingkat <strong>SMA, SMK, dan SLB</strong> merupakan wewenang langsung Pemerintah Provinsi Banten. Abah Saiful Milah berkomitmen penuh menghadirkan pendidikan menengah berkualitas yang berkeadilan bagi seluruh siswa.
+              </p>
+
+              {/* Core Manifestos list */}
+              <div className="space-y-4 pt-2">
+                {[
+                  { title: "Zonasi PPDB Adil & Kuota Tambahan", desc: "Mendorong penambahan rombongan belajar (rombel) di sekolah negeri yang sangat diminati agar menampung lebih banyak siswa lokal." },
+                  { title: "Program 1.000 Beasiswa Banten Pintar", desc: "Subsidi beasiswa penuh bagi anak dari keluarga kurang mampu untuk SMA/SMK swasta jika tidak lolos seleksi sekolah negeri." },
+                  { title: "Link-and-Match Vokasi Industri", desc: "Kemitraan strategis antara SMK se-Banten dengan kawasan industri manufaktur & teknologi di Tangerang dan Cilegon untuk penyerapan kerja cepat." }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex gap-3">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-xs font-bold mt-0.5">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">{item.title}</h4>
+                      <p className="text-xs text-slate-400 font-medium leading-relaxed mt-0.5">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Interactive Checker Widget */}
+            <div className="lg:col-span-7 rounded-2xl border border-amber-500/15 bg-white/95 p-6 sm:p-8 shadow-sm backdrop-blur-sm">
+              <h3 className="text-lg font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                <GraduationCap size={20} className="text-amber-600" />
+                Interaktif: Cek Kuota & Daftar Aspirasi Pendidikan
+              </h3>
+
+              <div className="space-y-4 mt-5">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-600">Wilayah Kabupaten/Kota</label>
+                    <select
+                      value={ppdbWilayah}
+                      onChange={(e) => setPpdbWilayah(e.target.value)}
+                      className="w-full rounded-lg border border-amber-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                    >
+                      <option value="Kota Tangerang">Kota Tangerang</option>
+                      <option value="Kabupaten Tangerang">Kabupaten Tangerang</option>
+                      <option value="Kota Tangerang Selatan">Kota Tangerang Selatan</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-600">Ketik Nama Sekolah (SMA/SMK)</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Contoh: SMAN 1, SMKN 3..."
+                        value={ppdbSekolah}
+                        onChange={(e) => setPpdbSekolah(e.target.value)}
+                        className="w-full rounded-lg border border-amber-200 bg-white px-3.5 py-2.5 text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                      />
+                      <MapPin size={14} className="absolute right-3.5 top-3 text-amber-500" />
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (!ppdbSekolah.trim()) {
+                      alert("Silakan ketik nama sekolah terlebih dahulu.");
+                      return;
+                    }
+                    setPpdbIsChecking(true);
+                    setPpdbResult(null);
+                    setTimeout(() => {
+                      setPpdbIsChecking(false);
+                      setPpdbResult({
+                        nama: ppdbSekolah.toUpperCase(),
+                        dayaTampung: Math.floor(Math.random() * 120 + 240),
+                        peminat: Math.floor(Math.random() * 300 + 400),
+                        zonasiPersen: Math.floor(Math.random() * 15 + 50)
+                      });
+                    }, 1000);
+                  }}
+                  className="w-full rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 text-xs font-black transition-all shadow-md shadow-amber-500/15 flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  {ppdbIsChecking ? (
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  ) : "Simulasikan Daya Tampung & Peluang Beasiswa"}
+                </button>
+
+                {/* Checker Results */}
+                {ppdbResult && (
+                  <div className="rounded-xl border border-amber-200 bg-amber-500/5 p-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="flex items-center justify-between border-b border-amber-200/30 pb-2">
+                      <span className="text-xs font-black text-slate-800">{ppdbResult.nama} ({ppdbWilayah})</span>
+                      <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider bg-amber-200/40 px-2 py-0.5 rounded">Status Terverifikasi</span>
+                    </div>
+                    <div className="grid gap-3 grid-cols-3 text-center">
+                      <div className="bg-white/80 p-2 rounded-lg border border-amber-200/50">
+                        <span className="block text-[10px] font-semibold text-slate-400">Daya Tampung</span>
+                        <span className="block text-sm font-black text-slate-800">{ppdbResult.dayaTampung} Siswa</span>
+                      </div>
+                      <div className="bg-white/80 p-2 rounded-lg border border-amber-200/50">
+                        <span className="block text-[10px] font-semibold text-slate-400">Estimasi Pendaftar</span>
+                        <span className="block text-sm font-black text-rose-600">{ppdbResult.peminat} Siswa</span>
+                      </div>
+                      <div className="bg-white/80 p-2 rounded-lg border border-amber-200/50">
+                        <span className="block text-[10px] font-semibold text-slate-400">Peluang Zonasi</span>
+                        <span className="block text-sm font-black text-emerald-600">{ppdbResult.zonasiPersen}% Aman</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-3 rounded-lg border border-amber-200/30 text-xs leading-relaxed font-semibold text-slate-700">
+                      <span className="font-black text-amber-700 block mb-1">Advokasi Abah Saiful Milah di Sekolah ini:</span>
+                      Mengusulkan penambahan {Math.floor(ppdbResult.dayaTampung * 0.1)} kuota kursi melalui program kelas paralel (rombel tambahan) serta mengupayakan <strong>Beasiswa Banten Pintar</strong> bagi siswa berprestasi yang kurang mampu di sekolah ini.
+                    </div>
+
+                    <div className="flex justify-end pt-1">
+                      <button
+                        onClick={() => {
+                          setShowBeasiswaForm(true);
+                          setBeasiswaSuccess(false);
+                        }}
+                        className="rounded-lg bg-slate-955 hover:bg-slate-900 text-yellow-400 px-4 py-2 text-xs font-black transition-colors cursor-pointer"
+                      >
+                        Ajukan Bantuan Beasiswa di Sini &rarr;
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Inline Scholarship Request Form */}
+                {showBeasiswaForm && (
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3 mt-4 animate-in fade-in duration-200 relative">
+                    <button
+                      onClick={() => setShowBeasiswaForm(false)}
+                      className="absolute top-3 right-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    >
+                      <X size={16} />
+                    </button>
+                    <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Form Pengajuan Aspirasi Beasiswa Banten Pintar</h4>
+                    
+                    {beasiswaSuccess ? (
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3.5 text-center space-y-2">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                          <CheckCircle2 size={18} />
+                        </span>
+                        <h5 className="text-xs font-bold text-slate-800">Aspirasi Beasiswa Berhasil Terkirim!</h5>
+                        <p className="text-[11px] text-slate-500 leading-normal">
+                          Permohonan atas nama <strong>{beasiswaNama}</strong> telah terdaftar dengan nomor tiket <strong>{beasiswaTicket}</strong>. Tim kerja Abah Saiful akan segera menghubungi Anda.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-slate-500">Nama Lengkap Siswa</label>
+                            <input
+                              type="text"
+                              placeholder="Ketik nama siswa..."
+                              value={beasiswaNama}
+                              onChange={(e) => setBeasiswaNama(e.target.value)}
+                              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-slate-500">Kelas Saat Ini</label>
+                            <select
+                              value={beasiswaKelas}
+                              onChange={(e) => setBeasiswaKelas(e.target.value)}
+                              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none"
+                            >
+                              <option value="10">Kelas 10 (SMA/SMK)</option>
+                              <option value="11">Kelas 11 (SMA/SMK)</option>
+                              <option value="12">Kelas 12 (SMA/SMK)</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-bold text-slate-500">No. WhatsApp Orang Tua / Wali</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="tel"
+                              placeholder="Contoh: 0812xxxxxxxx"
+                              value={beasiswaHp}
+                              onChange={(e) => setBeasiswaHp(e.target.value)}
+                              className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                            />
+                            <button
+                              onClick={() => {
+                                if (!beasiswaNama.trim() || !beasiswaHp.trim()) {
+                                  alert("Silakan lengkapi nama dan nomor WhatsApp.");
+                                  return;
+                                }
+                                setBeasiswaTicket(`BBP-2026-${Math.floor(Math.random() * 90000 + 10000)}`);
+                                setBeasiswaSuccess(true);
+                              }}
+                              className="rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-955 px-4 py-2 text-xs font-black transition-colors flex items-center gap-1 cursor-pointer shadow-sm"
+                            >
+                              <Send size={12} />
+                              Kirim Pengajuan
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3: Dinding Petisi Suara Banten */}
+      <section className="bg-gradient-to-b from-[#FFFDF5] to-white py-20 border-b border-amber-500/10 relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-12 items-start">
+            {/* Left: Input Form */}
+            <div className="lg:col-span-4 space-y-5 rounded-2xl border border-amber-500/15 bg-white/95 p-6 shadow-sm backdrop-blur-sm">
+              <div className="flex items-center gap-2.5 mb-2 pb-3 border-b border-slate-100">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-yellow-400/10 border border-yellow-400/20 text-amber-655">
+                  <UserCheck size={18} />
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-850 text-base">Ikut Berkomitmen</h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Petisi Dukungan Banten Maju</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-700">Nama Lengkap Anda</label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: Ahmad Maulana"
+                    value={petitionNama}
+                    onChange={(e) => setPetitionNama(e.target.value)}
+                    className="w-full rounded-lg border border-amber-200 bg-white px-3.5 py-2.5 text-xs font-medium text-slate-850 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-700">Wilayah Kecamatan (Tangerang)</label>
+                  <select
+                    value={petitionWilayah}
+                    onChange={(e) => setPetitionWilayah(e.target.value)}
+                    className="w-full rounded-lg border border-amber-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  >
+                    <option value="Ciledug">Ciledug</option>
+                    <option value="Larangan">Larangan</option>
+                    <option value="Karang Tengah">Karang Tengah</option>
+                    <option value="Cipondoh">Cipondoh</option>
+                    <option value="Pinang">Pinang</option>
+                    <option value="Tangerang">Tangerang</option>
+                    <option value="Batuceper">Batuceper</option>
+                    <option value="Neglasari">Neglasari</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-700">Fokus Program Utama yang Didukung</label>
+                  <select
+                    value={petitionPrioritas}
+                    onChange={(e) => setPetitionPrioritas(e.target.value)}
+                    className="w-full rounded-lg border border-amber-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  >
+                    <option value="Sekolah SMA/SMK Gratis">Sekolah SMA/SMK Gratis & Adil</option>
+                    <option value="Jalan Provinsi Mulus">Jalan Provinsi Mulus Bebas Lubang</option>
+                    <option value="Kerja Gampang & UMKM">Kerja Gampang & Kemitraan SMK</option>
+                    <option value="Banjir Lintas Batas">Penanganan Banjir Lintas Wilayah</option>
+                  </select>
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (!petitionNama.trim()) {
+                      alert("Silakan masukkan nama Anda terlebih dahulu.");
+                      return;
+                    }
+                    const newPetition = {
+                      nama: petitionNama,
+                      wilayah: petitionWilayah,
+                      prioritas: petitionPrioritas,
+                      waktu: "Baru saja"
+                    };
+                    
+                    setPetitions([newPetition, ...petitions]);
+                    setPetitionNama("");
+                    setTotalSupport(prev => prev + 1);
+                    setNewPetitionId(0); // Trigger animation on the first card
+                    setTimeout(() => setNewPetitionId(null), 3000);
+                  }}
+                  className="w-full rounded-lg bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white py-3 text-xs font-black shadow-md shadow-amber-500/20 transition-all hover:scale-[1.01] flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <ThumbsUp size={13} className="text-white" />
+                  Kirim Komitmen Dukungan
+                </button>
+              </div>
+            </div>
+
+            {/* Right: Wall of Support */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Animated Counter Banner */}
+              <div className="rounded-2xl border border-amber-400 bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 p-5 shadow-sm text-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-center sm:text-left">
+                  <h3 className="text-base font-black uppercase tracking-wider text-slate-955">Mandat Suara Rakyat Banten</h3>
+                  <p className="text-xs text-slate-800 font-semibold mt-0.5">Jumlah warga Tangerang yang telah menitipkan komitmen bersama Abah Saiful Milah</p>
+                </div>
+                <div className="shrink-0 bg-slate-950 text-yellow-400 px-6 py-2.5 rounded-xl border border-slate-800 text-center shadow-[0_4px_15px_rgba(0,0,0,0.15)]">
+                  <span className="block text-2xl font-black tracking-tight animate-in zoom-in-50 duration-300">{formatNumber(totalSupport)}</span>
+                  <span className="block text-[8px] font-black uppercase tracking-widest text-amber-500">Warga Terverifikasi</span>
+                </div>
+              </div>
+
+              {/* Grid of Pledges */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {petitions.map((p, idx) => (
+                  <div
+                    key={idx}
+                    className={cn(
+                      "relative overflow-hidden rounded-xl border border-amber-200/60 bg-white/95 p-4.5 shadow-sm transition-all duration-500 backdrop-blur-sm flex flex-col justify-between",
+                      idx === newPetitionId ? "border-amber-400 ring-2 ring-amber-400/50 bg-amber-500/5 scale-[1.03] shadow-md animate-bounce" : ""
+                    )}
+                  >
+                    <div className="absolute top-0 left-0 h-full w-[3px] bg-gradient-to-b from-amber-500 to-yellow-400" />
+                    
+                    <div>
+                      <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2 mb-2">
+                        <span className="text-xs font-black text-slate-800">{p.nama}</span>
+                        <span className="text-[9px] font-semibold text-slate-400">{p.waktu}</span>
+                      </div>
+                      <p className="text-xs text-slate-600 font-semibold leading-relaxed">
+                        &ldquo;Saya menitipkan komitmen untuk diperjuangkan di tingkat Provinsi Banten oleh Abah Saiful Milah.&rdquo;
+                      </p>
+                    </div>
+
+                    <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold">
+                      <span className="text-slate-400 uppercase">Kec. {p.wilayah}</span>
+                      <Badge variant="warning" className="text-[9px] px-2 py-0.5 border border-amber-500/10 font-black">
+                        {p.prioritas}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>

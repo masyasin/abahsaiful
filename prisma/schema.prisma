@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String
+  password  String
+  role      String    @default("admin")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Profile {
+  id            Int      @id @default(autoincrement())
+  namaLengkap   String
+  jabatan       String
+  lembaga       String
+  dapil         String
+  komisi        String
+  fraksi        String
+  tempatLahir   String
+  tanggalLahir  DateTime
+  fotoUrl       String   @default("")
+  badgeKetuaFraksi Boolean @default(true)
+  tentang       String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  riwayatJabatan RiwayatJabatan[]
+}
+
+model RiwayatJabatan {
+  id          Int      @id @default(autoincrement())
+  profileId   Int
+  jabatan     String
+  tahunMulai  Int
+  tahunSelesai Int?
+  keterangan  String   @default("")
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model WorkProgram {
+  id          Int      @id @default(autoincrement())
+  judul       String
+  deskripsi   String
+  kategori    String
+  progress    Int      @default(0)
+  status      String   @default("direncanakan")
+  icon        String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model News {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  content     String
+  excerpt     String   @default("")
+  imageUrl    String   @default("")
+  category    String
+  featured    Boolean  @default(false)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AspirationCategory {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  label String
+  color String @default("#6366f1")
+  icon  String @default("")
+  aspirations Aspiration[]
+}
+
+model Aspiration {
+  id          Int      @id @default(autoincrement())
+  nama        String
+  kontak      String   @default("")
+  judul       String
+  konten      String
+  kategoriId  Int?
+  kategori    AspirationCategory? @relation(fields: [kategoriId], references: [id])
+  aiCategory  String   @default("")
+  aiConfidence Float   @default(0)
+  status      String   @default("baru")
+  lokasi      String   @default("")
+  latitude    Float?
+  longitude   Float?
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  sla         SLA?
+  mapPin      MapPin?
+}
+
+model SLA {
+  id              Int      @id @default(autoincrement())
+  aspirationId    Int      @unique
+  targetHari      Int      @default(14)
+  tanggalMulai    DateTime @default(now())
+  tanggalSelesai  DateTime?
+  status          String   @default("baru")
+  aspiration      Aspiration @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
+}
+
+model MapPin {
+  id            Int      @id @default(autoincrement())
+  aspirationId  Int      @unique
+  x             Float
+  y             Float
+  warna         String   @default("biru")
+  aspiration    Aspiration @relation(fields: [aspirationId], references: [id], onDelete: Cascade)
+}
+
+model TPS {
+  id          Int      @id @default(autoincrement())
+  nama        String
+  alamat      String   @default("")
+  latitude    Float?
+  longitude   Float?
+  totalSuara  Int      @default(0)
+  suaraCaleg  Int      @default(0)
+  warna       String   @default("kuning")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Recommendation {
+  id              Int      @id @default(autoincrement())
+  title           String
+  opdTujuan       String
+  kategori        String
+  ringkasan       String
+  estimasiAnggaran Float   @default(0)
+  sumberDana      String   @default("")
+  justifikasi     String
+  prioritas       Int      @default(1)
+  statusExport    Boolean  @default(false)
+  exportUrl       String   @default("")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ContactMessage {
+  id          Int      @id @default(autoincrement())
+  nama        String
+  email       String
+  keperluan   String
+  pesan       String
+  createdAt   DateTime @default(now())
+}
+
+model Kegiatan {
+  id          Int      @id @default(autoincrement())
+  judul       String
+  deskripsi   String
+  tanggal     DateTime
+  kategori    String   @default("")
+  imageUrl    String   @default("")
+  createdAt   DateTime @default(now())
+}
+
+model KontakInfo {
+  id    Int    @id @default(autoincrement())
+  label String
+  value String
+  icon  String @default("")
+  tipe  String @default("kontak")
+}
